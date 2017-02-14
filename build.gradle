@@ -1,6 +1,8 @@
 plugins {
     id "java-gradle-plugin"
     id "groovy"
+    id 'maven'
+    id 'maven-publish'
 }
 
 repositories {
@@ -44,5 +46,29 @@ dependencies {
 
     functionalTestCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
         exclude module: 'groovy-all'
+    }
+}
+
+// publishing
+
+sourceCompatibility = 1.7
+group = 'org.zalando.gradle.plugins'
+version = '0.4.38'
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId 'swagger-codegen-gradle-plugin2'
+            groupId = project.group
+
+            artifact sourceJar {
+                classifier 'sources'
+            }
+        }
     }
 }

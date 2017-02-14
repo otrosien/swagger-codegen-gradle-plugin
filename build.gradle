@@ -3,6 +3,7 @@ plugins {
     id "groovy"
     id 'maven'
     id 'maven-publish'
+    id 'com.gradle.plugin-publish' version '0.9.7'
 }
 
 repositories {
@@ -69,6 +70,20 @@ publishing {
             artifact sourceJar {
                 classifier 'sources'
             }
+        }
+    }
+}
+
+pluginBundle {
+    website = 'https://github.com/otrosien/swagger-codegen-gradle-plugin'
+    vcsUrl = 'https://github.com/otrosien/swagger-codegen-gradle-plugin'
+    description = 'Swagger Generator Plugin for Gradle'
+    tags = ['swagger', 'api', 'generator']
+
+    plugins {
+        swaggerPlugin {
+            id = project.group
+            displayName = 'Swagger Generator Plugin for Gradle'
         }
     }
 }

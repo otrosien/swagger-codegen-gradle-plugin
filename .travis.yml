@@ -10,7 +10,9 @@ cache:
 install: true
 script: "./gradlew clean build jacoco"
 after_success:
+  - "./gradlew coveralls"
   - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./publish.sh; fi'
 env:
   global:
   - CI_NAME=travis-ci
+  - secure: "ETJ8xJTbNths0ne4QfUfmD5lJr2C0quxOOumFi/ires8lxRKykRJoUGwOWrmPYge7ObCCeTRPbFOEQBwLmrh6H5PGYym3JJOytO5BZjvweyvuald4T/OLH7ljCnT4uPCgHO3YQKGmfiqx3pubG1cla928j+ljhX06BcjVr0OePWIYmhGMetYNq4p4jbwJS7eflL4UQgyCsDcTvM1VkuHK8r4+AQsW2daezOR44F2apvjFZw7mJVadkktdF6xuL8EDcm3u64N7ahECKavBs/zyZ/zVxEyQ9DYT3XHcmVbeLp5HP/ayGtzjPoBtzFKY20ig436A8WgrpgxHkBz98HXKB0cduODcs8VIZMFiVuDYVTkQ4YTIURX0Z5Invs8V85SrPzMM3P9q9wygTNV3QdcZSojRJQySgRdtp630ivpoJ77vZG7gPeQBlHZPfhj92wZZ5Y23bnUTzH51yMR8qrpWqePGLmLs5ECDJAyBhRtSPJ/POZJWoFOpT2TaBucS2dR9FpD7scju3hcJa+6qKHolpNF9nmKDTbpLLYgCYdRvpFwcfr74NlgeDzQIS5DD2WDs2AZrL/vGvWYZJELJ0t4TPmjyBT77jMzVsXiRs6cnguv/z2bhmRYL+svhVJB9XbZ/XPZgiHcn/AI7GN00svzhZbRW4tci7ZVaXUg23DIDHg=" # COVERALLS_REPO_TOKEN

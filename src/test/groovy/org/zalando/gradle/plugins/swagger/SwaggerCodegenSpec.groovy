@@ -45,6 +45,7 @@ class SwaggerCodegenSpec extends Specification {
         then:
         project.tasks.findByName('swaggerCodegen').with {
             apiFile.name == 'swagger.yaml'
+            language     == 'springinterfaces'
             apiPackage   == 'com.example.project.api'
             modelPackage == 'com.example.project.model'
             skipModelgeneration == true
@@ -73,6 +74,20 @@ class SwaggerCodegenSpec extends Specification {
         GradleException e = thrown()
         e.message.contains("The 'apiFile' does not exists at")
 
-  } 
+    }
 
+    def "plugin can be used by its deprecated name"() {
+
+        given:
+        def project = ProjectBuilder.builder().build()
+
+        when:
+        project.with {
+            apply plugin: 'swagger-codegen'
+        }
+
+        then:
+        project.tasks.findByName('swaggerCodegen')
+
+    }
 }

@@ -18,15 +18,12 @@ package org.zalando.gradle.plugins.swagger;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.gradle.api.GradleException;
 import org.gradle.api.internal.AbstractTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
-import org.gradle.api.tasks.OutputDirectories;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 import org.zalando.stups.swagger.codegen.CodegenerationException;
@@ -35,75 +32,41 @@ import org.zalando.stups.swagger.codegen.YamlToJson;
 
 public class SwaggerCodegenTask extends AbstractTask {
 
-    @OutputDirectory
-    private File out = getProject().file("build/generated-src/swagger-codegen");
+    private File out = getProject().file("build/generated-sources/swagger-codegen");
 
-    // @Parameter(required = true, defaultValue =
-    // "${project.basedir}/src/main/resources/swagger.yaml")
     private File apiFile = getProject().file("src/main/resources/swagger.yaml");
 
-    // @Parameter(required = true)
     private String language;
 
-    // @Parameter
     private String apiPackage;
 
-    // @Parameter
     private String modelPackage;
 
-    // @Parameter(defaultValue = "false")
     private boolean skipModelgeneration = false;
 
-    // @Parameter(defaultValue = "false")
     private boolean skipApigeneration = false;
 
-    // @Parameter(defaultValue = "false")
     private boolean enable303 = false;
 
-    // @Parameter(defaultValue = "false")
     private boolean enableBuilderSupport = false;
 
-    // @Parameter
     private Map<String, Object> additionalProperties = new HashMap<>();
 
-    // @Parameter
     private ArrayList<String> excludedModels = new ArrayList<>();
 
     private boolean yamlToJson = false;
 
-    private File yamlToJsonOutputDirectory = getProject().file("build/generated-src/swagger-codegen");
+    private File yamlToJsonOutputDirectory = getProject().file("build/generated-sources/swagger-codegen");
 
-    //@formatter:off
     @TaskAction
     public void invokeSwaggerCodegen() throws Exception {
 
         try {
-
-            final StandaloneCodegenerator swaggerGenerator = StandaloneCodegenerator.builder()
-                                                                                     .withApiFilePath(apiFile.getPath())
-                                                                                     .forLanguage(language)
-                                                                                     .writeResultsTo(out)
-                                                                                     .withApiPackage(apiPackage)
-                                                                                     .withModelPackage(modelPackage)
-                                                                                     .withLogger(new GradleCodegeneratorLogger(getProject().getLogger()))
-                                                                                     .skipModelgeneration(skipModelgeneration)
-                                                                                     .skipApigeneration(skipApigeneration)
-                                                                                     .withModelsExcluded(excludedModels)
-                                                                                     .additionalProperties(additionalProperties)
-                                                                                     .enable303(enable303)
-                                                                                     .enableBuilderSupport(enableBuilderSupport)
-                                                                                     .build();
-
+            final StandaloneCodegenerator swaggerGenerator = buildSwaggerGenerator();
             try {
                 swaggerGenerator.generate();
-
                 if (yamlToJson) {
-
-                    final YamlToJson converter = YamlToJson.builder()
-                                                            .withYamlInputPath(apiFile.getPath())
-                                                            .withCodegeneratorLogger(new GradleCodegeneratorLogger(getProject().getLogger()))
-                                                            .withOutputDirectoryPath(yamlToJsonOutputDirectory.getAbsolutePath())
-                                                            .build();
+                    final YamlToJson converter = buildYamlToJsonGenerator();
                     converter.convert();
                 }
             } catch (CodegenerationException e) {
@@ -113,21 +76,38 @@ public class SwaggerCodegenTask extends AbstractTask {
             throw e;
         } catch (Exception e) {
             throw new GradleException("Unexpected error while executing swagger-codegen: " + e.getMessage(), e);
-
         }
+    }
+
+    //@formatter:off
+    private YamlToJson buildYamlToJsonGenerator() {
+        final YamlToJson converter = YamlToJson.builder()
+            .withYamlInputPath(apiFile.getPath())
+            .withCodegeneratorLogger(new GradleCodegeneratorLogger(getProject().getLogger()))
+            .withOutputDirectoryPath(yamlToJsonOutputDirectory.getAbsolutePath())
+            .build();
+        return converter;
     }
     //@formatter:on
 
-    @OutputDirectories
-    public Set<File> getOutputDirectories() {
-        final HashSet<File> files = new HashSet<>();
-        files.add(this.out);
-        return files;
+    //@formatter:off
+    private StandaloneCodegenerator buildSwaggerGenerator() {
+        return StandaloneCodegenerator.builder()
+         .withApiFilePath(apiFile.getPath())
+         .forLanguage(language)
+         .writeResultsTo(out)
+         .withApiPackage(apiPackage)
+         .withModelPackage(modelPackage)
+         .withLogger(new GradleCodegeneratorLogger(getProject().getLogger()))
+         .skipModelgeneration(skipModelgeneration)
+         .skipApigeneration(skipApigeneration)
+         .withModelsExcluded(excludedModels)
+         .additionalProperties(additionalProperties)
+         .enable303(enable303)
+         .enableBuilderSupport(enableBuilderSupport)
+         .build();
     }
-
-    public void out(Object dir) {
-        this.out = getProject().file(dir);
-    }
+    //@formatter:on
 
     @InputFile
     public File getApiFile() {
@@ -191,4 +171,14 @@ public class SwaggerCodegenTask extends AbstractTask {
     public void setYamlToJson(boolean yamlToJson) {
         this.yamlToJson = yamlToJson;
     }
+
+    @OutputDirectory
+    public File getOut() {
+        return this.out;
+    }
+
+    public void out(Object dir) {
+        this.out = getProject().file(dir);
+    }
+
 }

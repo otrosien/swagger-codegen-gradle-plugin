@@ -66,7 +66,7 @@ class SwaggerCodegenSpec extends Specification {
             swaggerCodegen {
                 apiFile 'missing.yaml'
             }
-        tasks.swaggerCodegen.invokeSwaggerCodegen()
+            tasks.swaggerCodegen.invokeSwaggerCodegen()
         }
 
         then:

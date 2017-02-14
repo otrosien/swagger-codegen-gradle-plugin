@@ -87,3 +87,5 @@ pluginBundle {
         }
     }
 }
+
+publish.dependsOn publishPlugins

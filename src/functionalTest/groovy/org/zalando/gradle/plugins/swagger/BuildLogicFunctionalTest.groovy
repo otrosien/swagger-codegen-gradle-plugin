@@ -12,7 +12,7 @@ class BuildLogicFunctionalTest extends Specification {
     def setup() {
         buildFile = testProjectDir.newFile('build.gradle')
         testProjectDir.newFolder('src','main','swagger-codegen')
-        testProjectDir.newFile('src/main/swagger-codegen/swagger.yaml') << this.getClass().getResource( '/swagger.yaml' ).text
+        testProjectDir.newFile('src/main/swagger-codegen/swagger.yaml') << BuildLogicFunctionalTest.getResource( '/swagger.yaml' ).text
     }
 
     @Unroll

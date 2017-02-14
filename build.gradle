@@ -63,7 +63,7 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifactId 'swagger-codegen-gradle-plugin2'
+            artifactId 'swagger-codegen-gradle-plugin'
             groupId = project.group
 
             artifact sourceJar {

@@ -25,8 +25,8 @@ public class DeprecatedSwaggerCodegenPlugin extends SwaggerCodegenPlugin {
 
     @Override
     public void apply(Project project) {
-        logger.warn("The plugin id 'spring-boot' is deprecated. Please use "
-                + "'org.springframework.boot' instead.");
+        logger.warn("The plugin id 'swagger-codegen' is deprecated. Please use "
+                + "'org.zalando.swagger-codegen' instead.");
         super.apply(project);
     }
 }

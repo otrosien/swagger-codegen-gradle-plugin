@@ -45,6 +45,6 @@ class BuildLogicFunctionalTest extends Specification {
         result.task(":swaggerCodegen").outcome == SUCCESS
 
         where:
-        gradleVersion << ['3.3']
+        gradleVersion << ['2.10','3.3']
     }
 }

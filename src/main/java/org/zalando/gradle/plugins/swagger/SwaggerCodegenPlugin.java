@@ -17,7 +17,6 @@ package org.zalando.gradle.plugins.swagger;
 
 import java.io.File;
 
-import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.artifacts.Configuration;
@@ -57,12 +56,8 @@ public class SwaggerCodegenPlugin implements Plugin<Project> {
                 String.format("%s/generated-src/swagger-codegen", project.getBuildDir());
         final File outputDirectory = new File(outputDirectoryName);
         swaggerCodegenTask.out(outputDirectory);
-        project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets().getByName("main", new Action<SourceSet>() {
-            @Override
-            public void execute(SourceSet sourceSet) {
-                sourceSet.getJava().srcDir(outputDirectory);
-            }
-        });
+        final SourceSet mainSourceSet = project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets().getByName("main");
+        mainSourceSet.getJava().srcDir(outputDirectory);
 
         //
         // Register the fact that swagger-codegen should run before

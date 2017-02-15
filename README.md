@@ -1,8 +1,8 @@
 ## Swagger-Codegen-Gradle Plugin
 
-[![Build Status](https://travis-ci.org/otrosien/swagger-codegen-gradle-plugin.svg?branch=master)](https://travis-ci.org/otrosien/swagger-codegen-gradle-plugin)
-[![License](https://img.shields.io/hexpm/l/plug.svg)](https://raw.githubusercontent.com/otrosien/swagger-codegen-gradle-plugin/master/LICENSE)
-[![Coverage Status](https://coveralls.io/repos/github/otrosien/swagger-codegen-gradle-plugin/badge.svg?branch=master)](https://coveralls.io/github/otrosien/swagger-codegen-gradle-plugin?branch=master)
+[![Build Status](https://travis-ci.org/zalando-incubator/swagger-codegen-gradle-plugin.svg?branch=master)](https://travis-ci.org/zalando-incubator/swagger-codegen-gradle-plugin)
+[![License](https://img.shields.io/hexpm/l/plug.svg)](https://raw.githubusercontent.com/zalando-incubator/swagger-codegen-gradle-plugin/master/LICENSE)
+[![Coverage Status](https://coveralls.io/repos/github/zalando-incubator/swagger-codegen-gradle-plugin/badge.svg?branch=master)](https://coveralls.io/github/zalando-incubator/swagger-codegen-gradle-plugin?branch=master)
 
 The project provides the tooling around gradle to generate code from OpenAPI-Specs. It pulls in custom templates to support Spring-MVC/Spring-Boot projects. Instead of generating code only once when a project starts (design phase), code will be generated at every build to make sure your code is in sync with your spec. For example, controllers/resources can be generated as interfaces, and developers will have to implement them. And changes in the specification will be reflected immediately on build/compile-step.
 
@@ -33,7 +33,7 @@ NOTE: The Swagger-Codegen-Gradle-Plugin is currently in development. So be prepa
 
 ## License
 
-Copyright 2017 Zalando SE
+Copyright 2015-2017 Zalando SE
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

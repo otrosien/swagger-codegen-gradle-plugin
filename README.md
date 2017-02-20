@@ -17,14 +17,35 @@ plugins {
     id 'org.zalando.swagger-codegen' version: '0.4.38'
 }
 
+// Full DSL description below, including their defaults.
 swaggerCodegen {
-    apiFile 'src/main/resources/swagger.yaml' // point to your OpenAPI spec file
-    // for zalando code templates choose between: 'springinterfaces', 'springinterfacesNoSwaggerAnnotations', 'springinterfacesResponseEntity', 'springinterfacesSplitResponseEntityNoSwaggerAnnotations', 'jaxrsinterfaces'
+    // point to your OpenAPI spec file
+    apiFile 'src/main/resources/swagger.yaml'
+
+    // code template to use. See swagger-codegen-tooling documentation at 
+    // https://stups.io/swagger-codegen-tooling/ for details.
     language 'jaxrsinterfaces'
+
     // package for your resource models
     apiPackage 'com.example.project.api'
+
     // package for your domain models
     modelPackage 'com.example.project.model'
+
+    // code generation output directory
+    out 'build/some-otherdir'
+
+    // skip model code generation
+    skipModelgeneration false
+
+    // skip api resource code generation
+    skipApigeneration false
+
+    // convert apiFile from YAML to JSON
+    yamlToJson false
+
+    // output directory for YAML to JSON conversion
+    yamlToJsonOutputDirectory 'build/generated-sources/swagger-codegen'
 }
 ```
 

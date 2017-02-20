@@ -71,6 +71,25 @@ class SwaggerCodegenSpec extends Specification {
 
     }
 
+    def "plugin should throw NPE on missing mandatory parameter"() {
+
+        given:
+        def project = ProjectBuilder.builder().build()
+
+        when:
+        project.with {
+            apply plugin: 'org.zalando.swagger-codegen'
+            swaggerCodegen {
+            }
+            tasks.swaggerCodegen.invokeSwaggerCodegen()
+        }
+
+        then:
+        NullPointerException e = thrown()
+        e.message.contains("Property [language] must be set")
+
+    }
+
     def "plugin should throw on missing swagger file"() {
 
         given:
@@ -81,6 +100,7 @@ class SwaggerCodegenSpec extends Specification {
             apply plugin: 'org.zalando.swagger-codegen'
             swaggerCodegen {
                 apiFile 'missing.yaml'
+                language 'springinterfaces'
             }
             tasks.swaggerCodegen.invokeSwaggerCodegen()
         }

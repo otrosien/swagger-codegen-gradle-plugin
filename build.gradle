@@ -7,6 +7,7 @@ plugins {
     id 'com.gradle.plugin-publish' version '0.9.7'
     id 'pl.allegro.tech.build.axion-release' version '1.3.4'
     id 'com.github.kt3k.coveralls' version '2.8.1'
+    id 'com.github.ben-manes.versions' version '0.14.0'
 }
 
 repositories {
@@ -51,7 +52,10 @@ gradlePlugin {
 dependencies {
 
     '0.4.38'.with { codegenVersion ->
-        compile "org.zalando.stups:swagger-codegen-common:${codegenVersion}"
+        compile("org.zalando.stups:swagger-codegen-common:${codegenVersion}") {
+          exclude module: 'maven-plugin-tools-api'
+          exclude module: 'maven-bundle-plugin'
+        }
         compile "org.zalando.stups:swagger-codegen-template-jaxrs-interfaces:${codegenVersion}"
         compile "org.zalando.stups:swagger-codegen-template-spring-interfaces:${codegenVersion}"
     }

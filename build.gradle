@@ -52,10 +52,7 @@ gradlePlugin {
 dependencies {
 
     '0.4.38'.with { codegenVersion ->
-        compile("org.zalando.stups:swagger-codegen-common:${codegenVersion}") {
-          exclude module: 'maven-plugin-tools-api'
-          exclude module: 'maven-bundle-plugin'
-        }
+        compile "org.zalando.stups:swagger-codegen-common:${codegenVersion}"
         compile "org.zalando.stups:swagger-codegen-template-jaxrs-interfaces:${codegenVersion}"
         compile "org.zalando.stups:swagger-codegen-template-spring-interfaces:${codegenVersion}"
     }
@@ -69,6 +66,12 @@ dependencies {
         }
     }
 }
+
+configurations {
+    all*.exclude module: 'maven-plugin-tools-api'
+    all*.exclude module: 'maven-bundle-plugin'
+}
+
 
 // coverage
 jacocoTestReport {

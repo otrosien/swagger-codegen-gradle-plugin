@@ -42,6 +42,7 @@ class BuildLogicFunctionalTest extends Specification {
                 language 'jaxrsinterfaces'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
+                yamlToJson true
             }
 
         """

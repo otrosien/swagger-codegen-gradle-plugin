@@ -46,7 +46,7 @@ class SwaggerCodegenSpec extends Specification {
         project.with {
             apply plugin: 'org.zalando.swagger-codegen'
             swaggerCodegen {
-                apiFile SwaggerCodegenSpec.getResource('/swagger.yaml').path
+                apiFile SwaggerCodegenSpec.getResource('/SwaggerCodegenSpec.yaml').path
                 language 'springinterfaces'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
@@ -59,7 +59,7 @@ class SwaggerCodegenSpec extends Specification {
 
         then:
         project.tasks.findByName('swaggerCodegen').with {
-            apiFile.name == 'swagger.yaml'
+            apiFile.name == 'SwaggerCodegenSpec.yaml'
             language     == 'springinterfaces'
             apiPackage   == 'com.example.project.api'
             modelPackage == 'com.example.project.model'

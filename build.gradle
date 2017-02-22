@@ -15,7 +15,7 @@ repositories {
 
 scmVersion {
     tag {
-        prefix = ''
+        prefix = 'v'
     }
 
     hooks {

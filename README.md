@@ -18,33 +18,34 @@ plugins {
 }
 
 // Full DSL description below, including their defaults.
+
 swaggerCodegen {
-    // point to your OpenAPI spec file
+    // location of your OpenAPI spec file. (mandatory)
     apiFile 'src/main/resources/swagger.yaml'
 
     // code template to use. See swagger-codegen-tooling documentation at 
-    // https://stups.io/swagger-codegen-tooling/ for details.
+    // https://stups.io/swagger-codegen-tooling/ for details. (mandatory)
     language 'jaxrsinterfaces'
 
-    // package for your resource models
+    // package for your resource models (mandatory)
     apiPackage 'com.example.project.api'
 
-    // package for your domain models
+    // package for your domain models (mandatory)
     modelPackage 'com.example.project.model'
 
-    // code generation output directory
-    out 'build/some-otherdir'
+    // code generation output directory (mandatory)
+    out 'build/generated-sources/swagger-codegen'
 
-    // skip model code generation
+    // skip model code generation (optional)
     skipModelgeneration false
 
-    // skip api resource code generation
+    // skip api resource code generation (optional)
     skipApigeneration false
 
-    // convert apiFile from YAML to JSON
+    // convert apiFile from YAML to JSON (optional)
     yamlToJson false
 
-    // output directory for YAML to JSON conversion
+    // output directory for YAML to JSON conversion (optional)
     yamlToJsonOutputDirectory 'build/generated-sources/swagger-codegen'
 }
 ```

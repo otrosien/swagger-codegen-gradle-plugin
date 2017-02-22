@@ -60,25 +60,24 @@ public class SwaggerCodegenTask extends AbstractTask {
     private File yamlToJsonOutputDirectory = getProject().file("build/generated-sources/swagger-codegen");
 
     @TaskAction
-    public void invokeSwaggerCodegen() throws Exception {
+    public void invokeSwaggerCodegen() {
 
         Objects.requireNonNull(apiFile, "Property [apiFile] must be set");
         Objects.requireNonNull(language, "Property [language] must be set");
         Objects.requireNonNull(out, "Property [out] must be set");
+        Objects.requireNonNull(apiPackage, "Property [apiPackage] must be set");
+        Objects.requireNonNull(modelPackage, "Property [modelPackage] must be set");
+
+        final StandaloneCodegenerator swaggerGenerator = buildSwaggerGenerator();
 
         try {
-            final StandaloneCodegenerator swaggerGenerator = buildSwaggerGenerator();
-            try {
-                swaggerGenerator.generate();
-                if (yamlToJson) {
-                    final YamlToJson converter = buildYamlToJsonGenerator();
-                    converter.convert();
-                }
-            } catch (CodegenerationException e) {
-                throw new GradleException(e.getMessage(), e);
+            swaggerGenerator.generate();
+            if (yamlToJson) {
+                final YamlToJson converter = buildYamlToJsonGenerator();
+                converter.convert();
             }
-        } catch (GradleException e) {
-            throw e;
+        } catch (CodegenerationException e) {
+            throw new GradleException(e.getMessage(), e);
         } catch (Exception e) {
             throw new GradleException("Unexpected error while executing swagger-codegen: " + e.getMessage(), e);
         }
@@ -86,12 +85,11 @@ public class SwaggerCodegenTask extends AbstractTask {
 
     //@formatter:off
     private YamlToJson buildYamlToJsonGenerator() {
-        final YamlToJson converter = YamlToJson.builder()
+        return YamlToJson.builder()
             .withYamlInputPath(apiFile.getPath())
             .withCodegeneratorLogger(new GradleCodegeneratorLogger(getProject().getLogger()))
             .withOutputDirectoryPath(yamlToJsonOutputDirectory.getAbsolutePath())
             .build();
-        return converter;
     }
     //@formatter:on
 

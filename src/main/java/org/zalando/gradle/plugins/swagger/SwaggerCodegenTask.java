@@ -19,6 +19,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import org.gradle.api.GradleException;
 import org.gradle.api.internal.AbstractTask;
@@ -60,6 +61,10 @@ public class SwaggerCodegenTask extends AbstractTask {
 
     @TaskAction
     public void invokeSwaggerCodegen() throws Exception {
+
+        Objects.requireNonNull(apiFile, "Property [apiFile] must be set");
+        Objects.requireNonNull(language, "Property [language] must be set");
+        Objects.requireNonNull(out, "Property [out] must be set");
 
         try {
             final StandaloneCodegenerator swaggerGenerator = buildSwaggerGenerator();

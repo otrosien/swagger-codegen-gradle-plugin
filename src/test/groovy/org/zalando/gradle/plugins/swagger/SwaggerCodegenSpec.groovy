@@ -17,6 +17,8 @@ package org.zalando.gradle.plugins.swagger
 
 import org.gradle.api.GradleException
 import org.gradle.testfixtures.ProjectBuilder
+import org.zalando.stups.swagger.codegen.CodegenerationException
+
 import spock.lang.Specification
 
 class SwaggerCodegenSpec extends Specification {
@@ -101,6 +103,8 @@ class SwaggerCodegenSpec extends Specification {
             swaggerCodegen {
                 apiFile 'missing.yaml'
                 language 'springinterfaces'
+                apiPackage 'com.example.project.api'
+                modelPackage 'com.example.project.model'
             }
             tasks.swaggerCodegen.invokeSwaggerCodegen()
         }
@@ -108,7 +112,7 @@ class SwaggerCodegenSpec extends Specification {
         then:
         GradleException e = thrown()
         e.message.contains("The 'apiFile' does not exists at")
-
+        e.cause instanceof CodegenerationException
     }
 
     def "plugin can be used by its deprecated name"() {

@@ -26,3 +26,10 @@
 approvals:
   ignore: pr_opener
   minimum: 1
+  from:
+    # commenter must be either one of:
+    # a public zalando org member
+    orgs:
+      - zalando
+    # a collaborator of the repo
+    collaborators: true

@@ -36,7 +36,6 @@ class SwaggerCodegenSpec extends Specification {
 
     }
 
-
     def "plugin should be configurable"() {
 
         given:
@@ -128,4 +127,32 @@ class SwaggerCodegenSpec extends Specification {
         project.tasks.findByName('swaggerCodegen')
 
     }
+
+    def "additional properties can be reset"() {
+
+        given:
+        def project = ProjectBuilder.builder().build()
+
+        when:
+        project.with {
+            apply plugin: 'org.zalando.swagger-codegen'
+            swaggerCodegen {
+                apiFile SwaggerCodegenSpec.getResource('/SwaggerCodegenSpec.yaml').path
+                language 'springinterfaces'
+                apiPackage 'com.example.project.api'
+                modelPackage 'com.example.project.model'
+                additionalProperties prop1 : 'val1'
+                additionalProperties prop2 : 'val2'
+                additionalProperties = [:]
+            }
+        }
+
+        then:
+        project.tasks.findByName('swaggerCodegen').with {
+            additionalProperties == [:]
+        }
+
+    }
+
+
 }

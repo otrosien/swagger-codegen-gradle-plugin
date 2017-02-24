@@ -177,6 +177,19 @@ public class SwaggerCodegenTask extends AbstractTask {
         this.yamlToJson = yamlToJson;
     }
 
+    @Input
+    public Map<String, Object> getAdditionalProperties() {
+        return additionalProperties;
+    }
+
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties = additionalProperties;
+    }
+
+    public void additionalProperties(Map<String, Object> additionalProperties) {
+        this.additionalProperties.putAll(additionalProperties);
+    }
+
     @OutputDirectory
     public File getOut() {
         return this.out;

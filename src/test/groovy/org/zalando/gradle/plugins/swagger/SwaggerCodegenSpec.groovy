@@ -53,6 +53,8 @@ class SwaggerCodegenSpec extends Specification {
                 skipModelgeneration true
                 skipApigeneration true
                 yamlToJson true
+                additionalProperties prop1 : 'val1'
+                additionalProperties prop2 : 'val2'
                 out 'build/some-otherdir'
             }
         }
@@ -66,6 +68,7 @@ class SwaggerCodegenSpec extends Specification {
             skipModelgeneration == true
             skipApigeneration   == true
             yamlToJson          == true
+            additionalProperties == [prop1 : 'val1', prop2 : 'val2']
             out.name == 'some-otherdir'
         }
 

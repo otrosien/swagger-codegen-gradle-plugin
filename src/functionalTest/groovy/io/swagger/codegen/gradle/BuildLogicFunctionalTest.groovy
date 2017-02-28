@@ -1,3 +1,4 @@
+package io.swagger.codegen.gradle;
 /**
  * Copyright (C) 2015-2017 Zalando SE (http://tech.zalando.com)
  *

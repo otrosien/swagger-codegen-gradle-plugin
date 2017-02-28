@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.zalando.gradle.plugins.swagger
+package io.swagger.codegen.gradle
 
 import org.gradle.api.GradleException
 import org.gradle.testfixtures.ProjectBuilder
+
 import spock.lang.Specification
 
 class SwaggerCodegenSpec extends Specification {

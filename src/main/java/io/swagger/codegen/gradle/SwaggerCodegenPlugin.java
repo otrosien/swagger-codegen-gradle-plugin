@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.zalando.gradle.plugins.swagger;
+package io.swagger.codegen.gradle;
 
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
@@ -51,11 +51,11 @@ public class SwaggerCodegenPlugin implements Plugin<Project> {
 
         project.afterEvaluate(new Action<Project>() {
             @Override
-            public void execute(Project arg0) {
+            public void execute(Project p) {
                 final SourceSet mainSourceSet = project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets().getByName("main");
-                final Task compileJava = arg0.getTasks().getByName("compileJava");
-                for(SwaggerCodegenTask t : arg0.getTasks().withType(SwaggerCodegenTask.class)) {
-                    mainSourceSet.getJava().srcDir(arg0.file(t.getOutputDir()));
+                final Task compileJava = p.getTasks().getByName("compileJava");
+                for(SwaggerCodegenTask t : p.getTasks().withType(SwaggerCodegenTask.class)) {
+                    mainSourceSet.getJava().srcDir(p.file(t.getOutputDir()));
                     compileJava.dependsOn(t);
                 }
             }

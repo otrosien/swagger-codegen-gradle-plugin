@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.zalando.gradle.plugins.swagger;
+package io.swagger.codegen.gradle;
 
 import java.io.File;
 

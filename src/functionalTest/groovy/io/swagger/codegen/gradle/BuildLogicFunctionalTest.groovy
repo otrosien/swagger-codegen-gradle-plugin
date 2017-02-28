@@ -38,6 +38,9 @@ class BuildLogicFunctionalTest extends Specification {
             plugins {
                 id 'io.swagger.codegen'
             }
+            repositories {
+                mavenCentral()
+            }
             swaggerCodegen {
                 inputSpec project.file('src/main/swagger-codegen/swagger.yaml')
                 language 'jaxrs'

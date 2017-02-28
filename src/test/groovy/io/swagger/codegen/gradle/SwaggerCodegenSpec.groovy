@@ -20,6 +20,7 @@ import org.gradle.testfixtures.ProjectBuilder
 
 import spock.lang.Specification
 
+// TODO: Test that the output dir can be seen on compileJava path.
 class SwaggerCodegenSpec extends Specification {
 
     def "plugin should provide generator task"() {
@@ -77,6 +78,9 @@ class SwaggerCodegenSpec extends Specification {
         when:
         project.with {
             apply plugin: 'io.swagger.codegen'
+            repositories {
+                mavenCentral()
+            }
             swaggerCodegen {
             }
             tasks.swaggerCodegen.invokeSwaggerCodegen()
@@ -96,6 +100,9 @@ class SwaggerCodegenSpec extends Specification {
         when:
         project.with {
             apply plugin: 'io.swagger.codegen'
+            repositories {
+                mavenCentral()
+            }
             swaggerCodegen {
                 inputSpec 'missing.yaml'
                 language 'spring'

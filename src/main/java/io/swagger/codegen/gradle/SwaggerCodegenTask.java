@@ -16,6 +16,10 @@
 package io.swagger.codegen.gradle;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
@@ -27,6 +31,9 @@ import org.gradle.api.tasks.TaskAction;
 import io.swagger.codegen.DefaultGenerator;
 import io.swagger.codegen.config.CodegenConfigurator;
 
+/*
+ * TODO: Maps / Sets for additional properties etc
+ */
 public class SwaggerCodegenTask extends DefaultTask {
 
     private CodegenConfigurator config = new CodegenConfigurator();
@@ -246,10 +253,18 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @TaskAction
-    public void invokeSwaggerCodegen() {
-        new DefaultGenerator()
-        .opts(config.toClientOptInput())
-        .generate();
+    public void invokeSwaggerCodegen() throws Exception {
+        Set<File> files = getProject().getConfigurations().getByName("swaggerCodegen").getFiles();
+        Set<URL> urls = new HashSet<>(files.size());
+        for (File file : files) {
+            urls.add(file.toURI().toURL());
+        }
+        try (URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[0]), 
+                Thread.currentThread().getContextClassLoader())) {
+            DefaultGenerator generator = (DefaultGenerator) classLoader.loadClass("io.swagger.codegen.DefaultGenerator").newInstance();
+            generator.opts(config.toClientOptInput())
+            .generate();
+        }
     }
 
 }

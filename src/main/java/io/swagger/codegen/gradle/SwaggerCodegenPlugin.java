@@ -20,10 +20,15 @@ import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 import org.gradle.api.Task;
 import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.artifacts.DependencySet;
 import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.SourceSet;
 
+/*
+ * TODO: dependency configuration for swagger-codegen version 
+ * (+ cross-compile integration test)
+ */
 public class SwaggerCodegenPlugin implements Plugin<Project> {
 
     @Override
@@ -35,26 +40,29 @@ public class SwaggerCodegenPlugin implements Plugin<Project> {
     }
 
     private void configureConfigurations(final Project project) {
-        final Configuration swaggerCodegenConfiguration = project.getConfigurations().create("swagger-codegen")
-                .setVisible(false);
-
-        project.getConfigurations().getByName(JavaPlugin.COMPILE_CONFIGURATION_NAME).extendsFrom(swaggerCodegenConfiguration);
+        final Configuration swaggerCodegenConfiguration = project.getConfigurations().maybeCreate("swaggerCodegen");
+        swaggerCodegenConfiguration.defaultDependencies(new Action<DependencySet>() {
+            @Override
+            public void execute(DependencySet dependencies) {
+                dependencies.add(project.getDependencies().create("io.swagger:swagger-codegen:2.2.1"));
+            }
+        });
 
     }
 
     private void configureSourceSet(final Project project) {
         SwaggerCodegenTask swaggerCodegenTask = project.getTasks().create("swaggerCodegen", SwaggerCodegenTask.class);
 
-        swaggerCodegenTask
-                .setDescription("Processes the Open-API definition.");
+        swaggerCodegenTask.setDescription("Processes the Open-API definition.");
         swaggerCodegenTask.setGroup("build");
 
         project.afterEvaluate(new Action<Project>() {
             @Override
             public void execute(Project p) {
-                final SourceSet mainSourceSet = project.getConvention().getPlugin(JavaPluginConvention.class).getSourceSets().getByName("main");
+                final SourceSet mainSourceSet = project.getConvention().getPlugin(JavaPluginConvention.class)
+                        .getSourceSets().getByName("main");
                 final Task compileJava = p.getTasks().getByName("compileJava");
-                for(SwaggerCodegenTask t : p.getTasks().withType(SwaggerCodegenTask.class)) {
+                for (SwaggerCodegenTask t : p.getTasks().withType(SwaggerCodegenTask.class)) {
                     mainSourceSet.getJava().srcDir(p.file(t.getOutputDir()));
                     compileJava.dependsOn(t);
                 }
@@ -62,6 +70,5 @@ public class SwaggerCodegenPlugin implements Plugin<Project> {
         });
 
     }
-
 
 }

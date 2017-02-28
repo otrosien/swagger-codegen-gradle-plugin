@@ -38,11 +38,10 @@ class BuildLogicFunctionalTest extends Specification {
                 id 'org.zalando.swagger-codegen'
             }
             swaggerCodegen {
-                apiFile project.file('src/main/swagger-codegen/swagger.yaml')
+                inputSpec project.file('src/main/swagger-codegen/swagger.yaml')
                 language 'jaxrsinterfaces'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
-                yamlToJson true
             }
 
         """

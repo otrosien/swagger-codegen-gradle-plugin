@@ -32,10 +32,12 @@ class SwaggerCodegenSpec extends Specification {
         }
 
         then:
-        project.tasks.findByName('swaggerCodegen')
+        // check for task existance and task defaults
+        project.tasks.findByName('swaggerCodegen') .with {
+            outputDir.name == 'swaggerCodegen'
+        }
 
     }
-
 
     def "plugin should be configurable"() {
 
@@ -46,30 +48,25 @@ class SwaggerCodegenSpec extends Specification {
         project.with {
             apply plugin: 'org.zalando.swagger-codegen'
             swaggerCodegen {
-                apiFile SwaggerCodegenSpec.getResource('/SwaggerCodegenSpec.yaml').path
-                language 'springinterfaces'
+                // check configuration params
+                inputSpec SwaggerCodegenSpec.getResource('/SwaggerCodegenSpec.yaml').path
+                lang 'springinterfaces'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
-                skipModelgeneration true
-                skipApigeneration true
-                yamlToJson true
-                out 'build/some-otherdir'
+                outputDir 'build/other-dir'
             }
         }
 
         then:
         project.tasks.findByName('swaggerCodegen').with {
-            apiFile.name == 'SwaggerCodegenSpec.yaml'
-            language     == 'springinterfaces'
-            apiPackage   == 'com.example.project.api'
-            modelPackage == 'com.example.project.model'
-            skipModelgeneration == true
-            skipApigeneration   == true
-            yamlToJson          == true
-            out.name == 'some-otherdir'
+            inputSpec.name == 'SwaggerCodegenSpec.yaml'
+            lang           == 'springinterfaces'
+            apiPackage     == 'com.example.project.api'
+            modelPackage   == 'com.example.project.model'
+            outputDir.name == 'other-dir'
         }
-
     }
+
 
     def "plugin should throw NPE on missing mandatory parameter"() {
 
@@ -86,43 +83,43 @@ class SwaggerCodegenSpec extends Specification {
 
         then:
         NullPointerException e = thrown()
-        e.message.contains("Property [language] must be set")
+        e.message.contains("language must be specified")
 
     }
-
-    def "plugin should throw on missing swagger file"() {
-
-        given:
-        def project = ProjectBuilder.builder().build()
-
-        when:
-        project.with {
-            apply plugin: 'org.zalando.swagger-codegen'
-            swaggerCodegen {
-                apiFile 'missing.yaml'
-                language 'springinterfaces'
-            }
-            tasks.swaggerCodegen.invokeSwaggerCodegen()
-        }
-
-        then:
-        GradleException e = thrown()
-        e.message.contains("The 'apiFile' does not exists at")
-
-    }
-
-    def "plugin can be used by its deprecated name"() {
-
-        given:
-        def project = ProjectBuilder.builder().build()
-
-        when:
-        project.with {
-            apply plugin: 'swagger-codegen'
-        }
-
-        then:
-        project.tasks.findByName('swaggerCodegen')
-
-    }
+//
+//    def "plugin should throw on missing swagger file"() {
+//
+//        given:
+//        def project = ProjectBuilder.builder().build()
+//
+//        when:
+//        project.with {
+//            apply plugin: 'org.zalando.swagger-codegen'
+//            swaggerCodegen {
+//                apiFile 'missing.yaml'
+//                language 'springinterfaces'
+//            }
+//            tasks.swaggerCodegen.invokeSwaggerCodegen()
+//        }
+//
+//        then:
+//        GradleException e = thrown()
+//        e.message.contains("The 'apiFile' does not exists at")
+//
+//    }
+//
+//    def "plugin can be used by its deprecated name"() {
+//
+//        given:
+//        def project = ProjectBuilder.builder().build()
+//
+//        when:
+//        project.with {
+//            apply plugin: 'swagger-codegen'
+//        }
+//
+//        then:
+//        project.tasks.findByName('swaggerCodegen')
+//
+//    }
 }

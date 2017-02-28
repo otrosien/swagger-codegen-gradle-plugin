@@ -40,7 +40,7 @@ class BuildLogicFunctionalTest extends Specification {
             }
             swaggerCodegen {
                 inputSpec project.file('src/main/swagger-codegen/swagger.yaml')
-                lang 'jaxrs'
+                language 'jaxrs'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
             }

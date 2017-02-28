@@ -48,12 +48,12 @@ public class SwaggerCodegenTask extends DefaultTask {
         return configFile;
     }
 
-    public void setLang(String lang) {
-        config.setLang(lang);
+    public void setLanguage(String language) {
+        config.setLang(language);
     }
 
     @Input
-    public String getLang() {
+    public String getLanguage() {
         return config.getLang();
     }
 

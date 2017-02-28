@@ -40,11 +40,13 @@ public class SwaggerCodegenPlugin implements Plugin<Project> {
     }
 
     private void configureConfigurations(final Project project) {
+        project.getExtensions().create("swaggerTooling", SwaggerToolingExtension.class);
         final Configuration swaggerCodegenConfiguration = project.getConfigurations().maybeCreate("swaggerCodegen");
         swaggerCodegenConfiguration.defaultDependencies(new Action<DependencySet>() {
             @Override
             public void execute(DependencySet dependencies) {
-                dependencies.add(project.getDependencies().create("io.swagger:swagger-codegen:2.2.1"));
+                String toolVersion = project.getExtensions().findByType(SwaggerToolingExtension.class).getCodegenVersion();
+                dependencies.add(project.getDependencies().create("io.swagger:swagger-codegen:" + toolVersion));
             }
         });
 

@@ -47,6 +47,7 @@ task functionalTest(type: Test) {
 }
 
 check.dependsOn functionalTest
+functionalTest.shouldRunAfter test
 
 gradlePlugin {
     testSourceSets sourceSets.functionalTest

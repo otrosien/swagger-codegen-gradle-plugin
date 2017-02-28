@@ -55,9 +55,9 @@ gradlePlugin {
 dependencies {
 
     '0.5.0-SNAPSHOT'.with { codegenVersion ->
-        compile "org.zalando.stups:swagger-codegen-common:${codegenVersion}"
-        compile "org.zalando.stups:swagger-codegen-template-jaxrs-interfaces:${codegenVersion}"
-        compile "org.zalando.stups:swagger-codegen-template-spring-interfaces:${codegenVersion}"
+        compile "io.swagger:swagger-codegen:2.2.1"
+//        compile "org.zalando.stups:swagger-codegen-template-jaxrs-interfaces:${codegenVersion}"
+//        compile "org.zalando.stups:swagger-codegen-template-spring-interfaces:${codegenVersion}"
     }
 
     testCompile 'org.assertj:assertj-core:3.6.2'

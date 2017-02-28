@@ -15,8 +15,6 @@
  */
 package org.zalando.gradle.plugins.swagger;
 
-import java.io.File;
-
 import org.gradle.api.Action;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;

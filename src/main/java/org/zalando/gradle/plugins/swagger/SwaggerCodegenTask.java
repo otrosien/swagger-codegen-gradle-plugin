@@ -20,11 +20,11 @@ import java.io.File;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
 import io.swagger.codegen.DefaultGenerator;
-import io.swagger.codegen.Generator;
 import io.swagger.codegen.config.CodegenConfigurator;
 
 public class SwaggerCodegenTask extends DefaultTask {
@@ -34,7 +34,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     private File configFile;
 
     public SwaggerCodegenTask() {
-        setOutputDir(getProject().file("build/generated-src/" + this.getName()));
+        outputDir(getProject().file("build/generated-src/" + this.getName()));
     }
  
     public void fromFile(Object file) {
@@ -43,15 +43,21 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @InputFile
+    @Optional
     public File getConfigFile() {
         return configFile;
     }
 
-    public CodegenConfigurator setLang(String lang) {
-        return config.setLang(lang);
+    public void setLang(String lang) {
+        config.setLang(lang);
     }
 
-    public void setInputSpec(String inputSpec) {
+    @Input
+    public String getLang() {
+        return config.getLang();
+    }
+
+    public void setInputSpec(Object inputSpec) {
         config.setInputSpec(getProject().file(inputSpec).getAbsolutePath());
     }
 
@@ -67,11 +73,12 @@ public class SwaggerCodegenTask extends DefaultTask {
         return outputDir != null ? getProject().file(outputDir) : null;
     }
 
-    public void setOutputDir(Object outputDir) {
+    public void outputDir(Object outputDir) {
         config.setOutputDir(getProject().file(outputDir).getAbsolutePath());
     }
 
     @Input
+    @Optional
     public String getModelPackage() {
         return config.getModelPackage();
     }
@@ -81,6 +88,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
+    @Optional
     public String getModelNamePrefix() {
         return config.getModelNamePrefix();
     }
@@ -90,6 +98,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
+    @Optional
     public String getModelNameSuffix() {
         return config.getModelNameSuffix();
     }
@@ -117,11 +126,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
-    public String getLang() {
-        return config.getLang();
-    }
-
-    @Input
+    @Optional
     public String getTemplateDir() {
         return config.getTemplateDir();
     }
@@ -131,6 +136,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
+    @Optional
     public String getAuth() {
         return config.getAuth();
     }
@@ -140,6 +146,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
+    @Optional
     public String getApiPackage() {
         return config.getApiPackage();
     }
@@ -149,6 +156,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
+    @Optional
     public String getInvokerPackage() {
         return config.getInvokerPackage();
     }
@@ -158,33 +166,37 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
+    @Optional
     public String getGroupId() {
         return config.getGroupId();
     }
 
-    public CodegenConfigurator setGroupId(String groupId) {
-        return config.setGroupId(groupId);
+    public void setGroupId(String groupId) {
+        config.setGroupId(groupId);
     }
 
     @Input
+    @Optional
     public String getArtifactId() {
         return config.getArtifactId();
     }
 
-    public CodegenConfigurator setArtifactId(String artifactId) {
-        return config.setArtifactId(artifactId);
+    public void setArtifactId(String artifactId) {
+        config.setArtifactId(artifactId);
     }
 
     @Input
+    @Optional
     public String getArtifactVersion() {
         return config.getArtifactVersion();
     }
 
-    public CodegenConfigurator setArtifactVersion(String artifactVersion) {
-        return config.setArtifactVersion(artifactVersion);
+    public void setArtifactVersion(String artifactVersion) {
+        config.setArtifactVersion(artifactVersion);
     }
 
     @Input
+    @Optional
     public String getLibrary() {
         return config.getLibrary();
     }
@@ -193,16 +205,18 @@ public class SwaggerCodegenTask extends DefaultTask {
         config.setLibrary(library);
     }
 
+    @Input
+    @Optional
     public String getGitUserId() {
         return config.getGitUserId();
     }
 
-    @Input
     public void setGitUserId(String gitUserId) {
         config.setGitUserId(gitUserId);
     }
 
     @Input
+    @Optional
     public String getGitRepoId() {
         return config.getGitRepoId();
     }
@@ -212,6 +226,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
+    @Optional
     public String getReleaseNote() {
         return config.getReleaseNote();
     }
@@ -221,6 +236,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
+    @Optional
     public String getHttpUserAgent() {
         return config.getHttpUserAgent();
     }
@@ -231,17 +247,9 @@ public class SwaggerCodegenTask extends DefaultTask {
 
     @TaskAction
     public void invokeSwaggerCodegen() {
-        codeGenerator()
+        new DefaultGenerator()
+        .opts(config.toClientOptInput())
         .generate();
-    }
-
-    CodegenConfigurator config() {
-        return config;
-    }
-
-    private Generator codeGenerator() {
-        return new DefaultGenerator()
-        .opts(config.toClientOptInput());
     }
 
 }

@@ -39,7 +39,7 @@ class BuildLogicFunctionalTest extends Specification {
             }
             swaggerCodegen {
                 inputSpec project.file('src/main/swagger-codegen/swagger.yaml')
-                language 'jaxrsinterfaces'
+                lang 'jaxrs'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
             }
@@ -60,6 +60,6 @@ class BuildLogicFunctionalTest extends Specification {
         result.task(":swaggerCodegen").outcome == SUCCESS
 
         where:
-        gradleVersion << ['2.10','3.3']
+        gradleVersion << ['2.9', '3.0', '3.4']
     }
 }

@@ -50,7 +50,7 @@ class SwaggerCodegenSpec extends Specification {
             swaggerCodegen {
                 // check configuration params
                 inputSpec SwaggerCodegenSpec.getResource('/SwaggerCodegenSpec.yaml').path
-                lang 'springinterfaces'
+                lang 'spring'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
                 outputDir 'build/other-dir'
@@ -60,7 +60,7 @@ class SwaggerCodegenSpec extends Specification {
         then:
         project.tasks.findByName('swaggerCodegen').with {
             inputSpec.name == 'SwaggerCodegenSpec.yaml'
-            lang           == 'springinterfaces'
+            lang           == 'spring'
             apiPackage     == 'com.example.project.api'
             modelPackage   == 'com.example.project.model'
             outputDir.name == 'other-dir'
@@ -86,40 +86,29 @@ class SwaggerCodegenSpec extends Specification {
         e.message.contains("language must be specified")
 
     }
-//
-//    def "plugin should throw on missing swagger file"() {
-//
-//        given:
-//        def project = ProjectBuilder.builder().build()
-//
-//        when:
-//        project.with {
-//            apply plugin: 'org.zalando.swagger-codegen'
-//            swaggerCodegen {
-//                apiFile 'missing.yaml'
-//                language 'springinterfaces'
-//            }
-//            tasks.swaggerCodegen.invokeSwaggerCodegen()
-//        }
-//
-//        then:
-//        GradleException e = thrown()
-//        e.message.contains("The 'apiFile' does not exists at")
-//
-//    }
-//
-//    def "plugin can be used by its deprecated name"() {
-//
-//        given:
-//        def project = ProjectBuilder.builder().build()
-//
-//        when:
-//        project.with {
-//            apply plugin: 'swagger-codegen'
-//        }
-//
-//        then:
-//        project.tasks.findByName('swaggerCodegen')
-//
-//    }
+
+    def "plugin should throw on missing swagger file"() {
+
+        given:
+        def project = ProjectBuilder.builder().build()
+
+        when:
+        project.with {
+            apply plugin: 'org.zalando.swagger-codegen'
+            swaggerCodegen {
+                inputSpec 'missing.yaml'
+                lang 'spring'
+            }
+            tasks.swaggerCodegen.invokeSwaggerCodegen()
+        }
+
+        then:
+        RuntimeException e = thrown()
+        e.message.contains("missing swagger input or config!")
+
+    }
+
+    // test: 
+    // - creation of additional swagger codegen task
+    // - up-to-date check
 }

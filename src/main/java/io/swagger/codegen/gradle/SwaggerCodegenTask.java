@@ -258,6 +258,7 @@ public class SwaggerCodegenTask extends DefaultTask {
         Set<URL> urls = new HashSet<>(files.size());
         for (File file : files) {
             urls.add(file.toURI().toURL());
+            System.out.println(file.toString());
         }
         try (URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[0]), 
                 Thread.currentThread().getContextClassLoader())) {

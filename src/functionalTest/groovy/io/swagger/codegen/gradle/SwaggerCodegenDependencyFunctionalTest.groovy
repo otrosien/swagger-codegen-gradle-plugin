@@ -18,6 +18,8 @@ import org.gradle.testkit.runner.GradleRunner
 import static org.gradle.testkit.runner.TaskOutcome.*
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
+
+import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -67,5 +69,40 @@ class SwaggerCodegenDependencyFunctionalTest extends Specification {
 
         where:
         swaggerCodegenVersion << ['2.1.6', '2.2.1']
+    }
+
+    @Ignore("not yet working")
+    def "can execute swaggerCodegen task with custom code template"() {
+        given:
+        buildFile << """
+            plugins {
+                id 'io.swagger.codegen'
+            }
+            repositories {
+                mavenCentral()
+            }
+            dependencies {
+                swaggerCodegen "org.zalando.stups:swagger-codegen-template-spring-interfaces:0.4.38"
+            }
+            swaggerCodegen {
+                inputSpec project.file('src/main/swagger-codegen/swagger.yaml')
+                language 'springinterfaces'
+                apiPackage 'com.example.project.api'
+                modelPackage 'com.example.project.model'
+            }
+
+        """
+
+        when:
+        def result = GradleRunner.create()
+            .withProjectDir(testProjectDir.root)
+            .withArguments('swaggerCodegen','--info','--stacktrace')
+            .withDebug(true)
+            .withPluginClasspath()
+            .build()
+
+        then:
+        ! result.output.contains('swaggerCodegen UP-TO-DATE')
+        result.task(":swaggerCodegen").outcome == SUCCESS
     }
 }

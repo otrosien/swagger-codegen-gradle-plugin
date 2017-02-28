@@ -29,7 +29,7 @@ class SwaggerCodegenSpec extends Specification {
 
         when:
         project.with {
-            apply plugin: 'org.zalando.swagger-codegen'
+            apply plugin: 'io.swagger.codegen'
         }
 
         then:
@@ -47,7 +47,7 @@ class SwaggerCodegenSpec extends Specification {
 
         when:
         project.with {
-            apply plugin: 'org.zalando.swagger-codegen'
+            apply plugin: 'io.swagger.codegen'
             swaggerCodegen {
                 // check configuration params
                 inputSpec SwaggerCodegenSpec.getResource('/SwaggerCodegenSpec.yaml').path
@@ -76,7 +76,7 @@ class SwaggerCodegenSpec extends Specification {
 
         when:
         project.with {
-            apply plugin: 'org.zalando.swagger-codegen'
+            apply plugin: 'io.swagger.codegen'
             swaggerCodegen {
             }
             tasks.swaggerCodegen.invokeSwaggerCodegen()
@@ -95,7 +95,7 @@ class SwaggerCodegenSpec extends Specification {
 
         when:
         project.with {
-            apply plugin: 'org.zalando.swagger-codegen'
+            apply plugin: 'io.swagger.codegen'
             swaggerCodegen {
                 inputSpec 'missing.yaml'
                 lang 'spring'

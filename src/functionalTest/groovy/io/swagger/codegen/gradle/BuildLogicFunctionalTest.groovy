@@ -36,7 +36,7 @@ class BuildLogicFunctionalTest extends Specification {
         given:
         buildFile << """
             plugins {
-                id 'org.zalando.swagger-codegen'
+                id 'io.swagger.codegen'
             }
             swaggerCodegen {
                 inputSpec project.file('src/main/swagger-codegen/swagger.yaml')

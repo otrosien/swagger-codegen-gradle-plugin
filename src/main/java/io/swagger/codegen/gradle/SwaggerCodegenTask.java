@@ -18,9 +18,14 @@ package io.swagger.codegen.gradle;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputFile;
@@ -252,13 +257,103 @@ public class SwaggerCodegenTask extends DefaultTask {
         config.setHttpUserAgent(httpUserAgent);
     }
 
+    @Input
+    public Map<String, String> getInstantiationTypes() {
+        return config.getInstantiationTypes();
+    }
+
+    public void setInstantiationTypes(Map<String, String> instantiationTypes) {
+        config.setInstantiationTypes(instantiationTypes);
+    }
+
+    public void instantiationTypes(Map<String, String> instantiationTypes) {
+        for(Map.Entry<String, String> entry : instantiationTypes.entrySet()) {
+            config.addInstantiationType(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Input
+    public Map<String, String> getSystemProperties() {
+        return config.getSystemProperties();
+    }
+
+    public void setSystemProperties(Map<String, String> systemProperties) {
+        config.setSystemProperties(systemProperties);
+    }
+
+    public void systemProperties(Map<String, String> systemProperties) {
+        for(Map.Entry<String, String> entry : systemProperties.entrySet()) {
+            config.addSystemProperty(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Input
+    public Map<String, String> getTypeMappings() {
+        return config.getTypeMappings();
+    }
+
+    public void setTypeMappings(Map<String, String> typeMappings) {
+        config.setTypeMappings(typeMappings);
+    }
+
+    public void typeMappings(Map<String, String> typeMappings) {
+        for (Map.Entry<String, String> entry : typeMappings.entrySet()) {
+            config.addTypeMapping(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Input
+    public Map<String, String> getAdditionalProperties() {
+        return config.getAdditionalProperties();
+    }
+
+    public void setAdditionalProperties(Map<String, String> additionalProperties) {
+        config.setAdditionalProperties(additionalProperties);
+    }
+
+    public void additionalProperties(Map<String, String> additionalProperties) {
+        for (Map.Entry<String, String> entry : additionalProperties.entrySet()) {
+            config.addAdditionalProperty(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Input
+    public Map<String, String> getImportMappings() {
+        return config.getImportMappings();
+    }
+
+    public void setImportMappings(Map<String, String> importMappings) {
+        config.setImportMappings(importMappings);
+    }
+
+    public void importMappings(Map<String, String> importMappings) {
+        for (Map.Entry<String, String> entry : importMappings.entrySet()) {
+            config.addImportMapping(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Input
+    public Set<String> getLanguageSpecificPrimitives() {
+        return config.getLanguageSpecificPrimitives();
+    }
+
+    public void setLanguageSpecificPrimitives(List<String> languageSpecificPrimitives) {
+        config.setLanguageSpecificPrimitives(new HashSet<>(languageSpecificPrimitives));
+    }
+
+    public void languageSpecificPrimitives(String... languageSpecificPrimitives) {
+        for (String s : languageSpecificPrimitives) {
+            config.addLanguageSpecificPrimitive(s);
+        }
+    }
+
     @TaskAction
     public void invokeSwaggerCodegen() throws Exception {
         Set<File> files = getProject().getConfigurations().getByName("swaggerCodegen").getFiles();
         Set<URL> urls = new HashSet<>(files.size());
         for (File file : files) {
             urls.add(file.toURI().toURL());
-            System.out.println(file.toString());
+//            System.out.println(file.toString());
         }
         try (URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[0]), 
                 Thread.currentThread().getContextClassLoader())) {

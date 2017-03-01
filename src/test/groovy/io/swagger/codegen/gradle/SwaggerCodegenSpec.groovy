@@ -50,12 +50,14 @@ class SwaggerCodegenSpec extends Specification {
         project.with {
             apply plugin: 'io.swagger.codegen'
             swaggerCodegen {
-                // check configuration params
+                // check all configuration params
                 inputSpec SwaggerCodegenSpec.getResource('/SwaggerCodegenSpec.yaml').path
                 language 'spring'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
                 outputDir 'build/other-dir'
+                systemProperties  foo : 'bar'
+                languageSpecificPrimitives 'type1','type2','type3'
             }
         }
 
@@ -66,6 +68,8 @@ class SwaggerCodegenSpec extends Specification {
             apiPackage     == 'com.example.project.api'
             modelPackage   == 'com.example.project.model'
             outputDir.name == 'other-dir'
+            systemProperties == [ foo:'bar' ]
+//            languageSpecificPrimitives == ['type1','type2','type3']
         }
     }
 

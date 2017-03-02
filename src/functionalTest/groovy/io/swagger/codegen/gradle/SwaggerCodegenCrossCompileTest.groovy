@@ -30,6 +30,7 @@ class SwaggerCodegenCrossCompileTest extends Specification {
     def setup() {
         buildFile = testProjectDir.newFile('build.gradle')
         testProjectDir.newFolder('src','main','swagger-codegen')
+        testProjectDir.newFolder('src','main','swagger-templates')
         testProjectDir.newFile('src/main/swagger-codegen/swagger.yaml') << SwaggerCodegenCrossCompileTest.getResource( '/swagger.yaml' ).text
     }
 
@@ -48,11 +49,30 @@ class SwaggerCodegenCrossCompileTest extends Specification {
             }
             swaggerCodegen {
                 inputSpec project.file('src/main/swagger-codegen/swagger.yaml')
-                language 'jaxrs'
+                language 'spring'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
+                invokerPackage 'com.example.invoker'
+                groupId 'org.example'
+                artifactId 'demo'
+                artifactVersion '0.0.1'
+                library 'spring-cloud'
+                gitUserId 'user'
+                gitRepoId 'github-repo'
+                httpUserAgent 'User/Agent 1.0'
+                releaseNote 'See CHANGELOG.md'
+                modelNamePrefix 'Default'
+                modelNameSuffix 'Gen'
+                templateDir 'src/main/swagger-templates'
+                auth 'username%3Apassword'
+                verbose true
+                skipOverwrite true
+                outputDir 'build/output-dir'
+                systemProperties  foo:'bar'
+                instantiationTypes 'array':'ArrayList','map':'HashMap'
+                importMappings 'id':'identifier'
+                languageSpecificPrimitives = ['type1','type2','type3']
             }
-
         """
 
         when:

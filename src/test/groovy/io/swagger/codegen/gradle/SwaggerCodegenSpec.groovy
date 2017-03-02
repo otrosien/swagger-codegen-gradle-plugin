@@ -108,7 +108,6 @@ class SwaggerCodegenSpec extends Specification {
         }
     }
 
-
     def "plugin should throw NPE on missing mandatory parameter"() {
 
         given:
@@ -153,6 +152,28 @@ class SwaggerCodegenSpec extends Specification {
         RuntimeException e = thrown()
         e.message.contains("missing swagger input or config!")
 
+    }
+
+    def "should load input spec from a file"() {
+
+        given:
+        def project = ProjectBuilder.builder().build()
+        project.file('spec.json') << """{"inputSpec":"file.yaml", "lang":"php"}"""
+
+        when:
+        project.with {
+            apply plugin: 'io.swagger.codegen'
+            repositories {
+                mavenCentral()
+            }
+            swaggerCodegen.fromFile 'spec.json'
+        }
+
+        then:
+        project.tasks.findByName('swaggerCodegen').with {
+            inputSpec.name   == 'file.yaml'
+            language         == 'php'
+        }
     }
 
     // test: 

@@ -18,16 +18,15 @@ package io.swagger.codegen.gradle;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.gradle.api.Action;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.InputFile;
 import org.gradle.api.tasks.Optional;
 import org.gradle.api.tasks.OutputDirectory;
@@ -36,9 +35,6 @@ import org.gradle.api.tasks.TaskAction;
 import io.swagger.codegen.DefaultGenerator;
 import io.swagger.codegen.config.CodegenConfigurator;
 
-/*
- * TODO: Maps / Sets for additional properties etc
- */
 public class SwaggerCodegenTask extends DefaultTask {
 
     private CodegenConfigurator config = new CodegenConfigurator();
@@ -61,6 +57,11 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     public void setLanguage(String language) {
+        config.setLang(language);
+    }
+
+    // compatibility with CodegenConfigurator API
+    public void setLang(String language) {
         config.setLang(language);
     }
 
@@ -137,14 +138,18 @@ public class SwaggerCodegenTask extends DefaultTask {
         config.setSkipOverwrite(skipOverwrite);
     }
 
-    @Input
+    @InputDirectory
     @Optional
-    public String getTemplateDir() {
-        return config.getTemplateDir();
+    public File getTemplateDir() {
+        return
+                config.getTemplateDir() != null
+                ? getProject().file(config.getTemplateDir())
+                : null;
     }
 
-    public void setTemplateDir(String templateDir) {
-        config.setTemplateDir(templateDir);
+    public void setTemplateDir(Object templateDir) {
+        // TODO: swagger-codegen evaluates the directory existance too early.
+        config.setTemplateDir(getProject().file(templateDir).getAbsolutePath());
     }
 
     @Input
@@ -303,11 +308,11 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
-    public Map<String, String> getAdditionalProperties() {
+    public Map<String, Object> getAdditionalProperties() {
         return config.getAdditionalProperties();
     }
 
-    public void setAdditionalProperties(Map<String, String> additionalProperties) {
+    public void setAdditionalProperties(Map<String, Object> additionalProperties) {
         config.setAdditionalProperties(additionalProperties);
     }
 
@@ -333,16 +338,16 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     @Input
-    public Set<String> getLanguageSpecificPrimitives() {
-        return config.getLanguageSpecificPrimitives();
+    public List<String> getLanguageSpecificPrimitives() {
+        return new ArrayList<>(config.getLanguageSpecificPrimitives());
     }
 
-    public void setLanguageSpecificPrimitives(List<String> languageSpecificPrimitives) {
-        config.setLanguageSpecificPrimitives(new HashSet<>(languageSpecificPrimitives));
+    public void setLanguageSpecificPrimitives(List<String> specificPrimitives) {
+        config.setLanguageSpecificPrimitives(new HashSet<>(specificPrimitives));
     }
 
-    public void languageSpecificPrimitives(String... languageSpecificPrimitives) {
-        for (String s : languageSpecificPrimitives) {
+    public void languageSpecificPrimitives(String... specificPrimitives) {
+        for (String s : specificPrimitives) {
             config.addLanguageSpecificPrimitive(s);
         }
     }

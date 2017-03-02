@@ -45,6 +45,7 @@ class SwaggerCodegenSpec extends Specification {
 
         given:
         def project = ProjectBuilder.builder().build()
+        project.file('src/main/swagger-templates').mkdirs()
 
         when:
         project.with {
@@ -55,21 +56,55 @@ class SwaggerCodegenSpec extends Specification {
                 language 'spring'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
-                outputDir 'build/other-dir'
-                systemProperties  foo : 'bar'
-                languageSpecificPrimitives 'type1','type2','type3'
+                invokerPackage 'com.example.invoker'
+                groupId 'org.example'
+                artifactId 'demo'
+                artifactVersion '0.0.1'
+                library 'spring-cloud'
+                gitUserId 'user'
+                gitRepoId 'github-repo'
+                httpUserAgent 'User/Agent 1.0'
+                releaseNote 'See CHANGELOG.md'
+                modelNamePrefix 'Default'
+                modelNameSuffix 'Gen'
+                templateDir 'src/main/swagger-templates'
+                auth 'username%3Apassword'
+                verbose true
+                skipOverwrite true
+                outputDir 'build/output-dir'
+                systemProperties  foo:'bar'
+                instantiationTypes 'array':'ArrayList','map':'HashMap'
+                importMappings 'id':'identifier'
+                languageSpecificPrimitives = ['type1','type2','type3']
             }
         }
 
         then:
         project.tasks.findByName('swaggerCodegen').with {
-            inputSpec.name == 'SwaggerCodegenSpec.yaml'
-            language       == 'spring'
-            apiPackage     == 'com.example.project.api'
-            modelPackage   == 'com.example.project.model'
-            outputDir.name == 'other-dir'
+            inputSpec.name   == 'SwaggerCodegenSpec.yaml'
+            language         == 'spring'
+            apiPackage       == 'com.example.project.api'
+            modelPackage     == 'com.example.project.model'
+            invokerPackage   == 'com.example.invoker'
+            groupId          == 'org.example'
+            artifactId       == 'demo'
+            artifactVersion  == '0.0.1'
+            library          == 'spring-cloud'
+            gitUserId        == 'user'
+            gitRepoId        == 'github-repo'
+            httpUserAgent    == 'User/Agent 1.0'
+            releaseNote      == 'See CHANGELOG.md'
+            modelNamePrefix  == 'Default'
+            modelNameSuffix  == 'Gen'
+            templateDir.name == 'swagger-templates'
+            auth             == 'username%3Apassword'
+            verbose          == true
+            skipOverwrite    == true
+            outputDir.name   == 'output-dir'
             systemProperties == [ foo:'bar' ]
-//            languageSpecificPrimitives == ['type1','type2','type3']
+            instantiationTypes == ['array':'ArrayList','map':'HashMap']
+            languageSpecificPrimitives == ['type1','type2','type3']
+            importMappings   == ['id':'identifier']
         }
     }
 

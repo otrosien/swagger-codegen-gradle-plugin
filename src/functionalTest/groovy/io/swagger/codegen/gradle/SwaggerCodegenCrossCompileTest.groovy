@@ -68,7 +68,7 @@ class SwaggerCodegenCrossCompileTest extends Specification {
         result.task(":swaggerCodegen").outcome == SUCCESS
 
         where:
-        swaggerCodegenVersion << ['2.1.6', '2.2.1']
+        swaggerCodegenVersion << ['2.1.6', '2.2.1', '2.2.2']
     }
 
     @Ignore("not yet working")

@@ -23,6 +23,7 @@ import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
+// TODO: Add reflection test to see if we're missing any SwaggerCodegen properties
 class SwaggerCodegenCrossCompileTest extends Specification {
     @Rule final TemporaryFolder testProjectDir = new TemporaryFolder()
     File buildFile
@@ -32,6 +33,12 @@ class SwaggerCodegenCrossCompileTest extends Specification {
         testProjectDir.newFolder('src','main','swagger-codegen')
         testProjectDir.newFolder('src','main','swagger-templates')
         testProjectDir.newFile('src/main/swagger-codegen/swagger.yaml') << SwaggerCodegenCrossCompileTest.getResource( '/swagger.yaml' ).text
+    }
+
+    File file(String path) {
+        def file = new File(testProjectDir.root, path)
+        assert file.parentFile.mkdirs() || file.parentFile.exists()
+        file
     }
 
     @Unroll
@@ -73,12 +80,17 @@ class SwaggerCodegenCrossCompileTest extends Specification {
                 importMappings 'id':'identifier'
                 languageSpecificPrimitives = ['type1','type2','type3']
             }
+            task showDeps {
+                doLast {
+                    project.file('deps.txt') << configurations.swaggerCodegen.dependencies*.toString().join('\\n')
+                }
+            }
         """
 
         when:
         def result = GradleRunner.create()
             .withProjectDir(testProjectDir.root)
-            .withArguments('swaggerCodegen','--info','--stacktrace')
+            .withArguments('swaggerCodegen', 'showDeps','--info','--stacktrace')
             .withDebug(true)
             .withPluginClasspath()
             .build()
@@ -86,12 +98,14 @@ class SwaggerCodegenCrossCompileTest extends Specification {
         then:
         ! result.output.contains('swaggerCodegen UP-TO-DATE')
         result.task(":swaggerCodegen").outcome == SUCCESS
+//        println file('deps.txt').text
+        file('deps.txt').text.contains("name='swagger-codegen', version='$swaggerCodegenVersion'")
 
         where:
         swaggerCodegenVersion << ['2.1.6', '2.2.1', '2.2.2']
     }
 
-    @Ignore("not yet working")
+    /* TODO Fix test */ @Ignore("not yet working")
     def "can execute swaggerCodegen task with custom code template"() {
         given:
         buildFile << """
@@ -102,6 +116,7 @@ class SwaggerCodegenCrossCompileTest extends Specification {
                 mavenCentral()
             }
             dependencies {
+//                swaggerCodegen 'org.zalando.stups:swagger-codegen-common:0.4.38'
                 swaggerCodegen "org.zalando.stups:swagger-codegen-template-spring-interfaces:0.4.38"
             }
             swaggerCodegen {

@@ -21,6 +21,9 @@ import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
 // TODO: Test that the output dir can be seen on compileJava path.
+// TODO: Test creation of additional swagger codegen task
+// TODO: Test up-to-date checks
+// TODO: Create documentation snippets from the tests to include in README / cross-compile tests
 class SwaggerCodegenSpec extends Specification {
 
     def "plugin should provide generator task"() {
@@ -175,8 +178,4 @@ class SwaggerCodegenSpec extends Specification {
             language         == 'php'
         }
     }
-
-    // test: 
-    // - creation of additional swagger codegen task
-    // - up-to-date check
 }

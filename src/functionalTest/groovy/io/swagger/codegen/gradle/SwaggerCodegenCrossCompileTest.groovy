@@ -23,7 +23,6 @@ import spock.lang.Ignore
 import spock.lang.Specification
 import spock.lang.Unroll
 
-// TODO: Add reflection test to see if we're missing any SwaggerCodegen properties
 class SwaggerCodegenCrossCompileTest extends Specification {
     @Rule final TemporaryFolder testProjectDir = new TemporaryFolder()
     File buildFile
@@ -48,6 +47,9 @@ class SwaggerCodegenCrossCompileTest extends Specification {
             plugins {
                 id 'io.swagger.codegen'
             }
+            import io.swagger.codegen.config.CodegenConfigurator
+            import java.lang.reflect.Modifier
+
             repositories {
                 mavenCentral()
             }
@@ -85,12 +87,25 @@ class SwaggerCodegenCrossCompileTest extends Specification {
                     project.file('deps.txt') << configurations.swaggerCodegen.dependencies*.toString().join('\\n')
                 }
             }
+            task reflectApi {
+                doLast {
+                    def getterSetters = { it.declaredMethods.findAll { 
+                        java.lang.reflect.Modifier.isPublic(it.getModifiers()) &&
+                        ( it.name.startsWith('get') || it.name.startsWith('set') || it.name.startsWith('is') ) }
+                        .collect { it.name }
+                    }
+                    def accessibleMethods = getterSetters(tasks.swaggerCodegen.class)
+                    def apiMethods = getterSetters(io.swagger.codegen.config.CodegenConfigurator.class)
+                    apiMethods.removeAll(accessibleMethods)
+                    assert apiMethods == []
+                }
+            }
         """
 
         when:
         def result = GradleRunner.create()
             .withProjectDir(testProjectDir.root)
-            .withArguments('swaggerCodegen', 'showDeps','--info','--stacktrace')
+            .withArguments('swaggerCodegen', 'showDeps','reflectApi','--info','--stacktrace')
             .withDebug(true)
             .withPluginClasspath()
             .build()
@@ -98,7 +113,6 @@ class SwaggerCodegenCrossCompileTest extends Specification {
         then:
         ! result.output.contains('swaggerCodegen UP-TO-DATE')
         result.task(":swaggerCodegen").outcome == SUCCESS
-//        println file('deps.txt').text
         file('deps.txt').text.contains("name='swagger-codegen', version='$swaggerCodegenVersion'")
 
         where:

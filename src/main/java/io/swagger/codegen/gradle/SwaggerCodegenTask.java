@@ -42,7 +42,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     private File configFile;
 
     public SwaggerCodegenTask() {
-        outputDir(getProject().file("build/generated-src/" + this.getName()));
+        setOutputDir(getProject().file("build/generated-src/" + this.getName()));
     }
  
     public void fromFile(Object file) {
@@ -56,6 +56,11 @@ public class SwaggerCodegenTask extends DefaultTask {
         return configFile;
     }
 
+    @Input
+    public String getLanguage() {
+        return config.getLang();
+    }
+
     public void setLanguage(String language) {
         config.setLang(language);
     }
@@ -65,8 +70,8 @@ public class SwaggerCodegenTask extends DefaultTask {
         config.setLang(language);
     }
 
-    @Input
-    public String getLanguage() {
+    // compatibility with CodegenConfigurator API
+    public String getLang() {
         return config.getLang();
     }
 
@@ -86,7 +91,7 @@ public class SwaggerCodegenTask extends DefaultTask {
         return outputDir != null ? getProject().file(outputDir) : null;
     }
 
-    public void outputDir(Object outputDir) {
+    public void setOutputDir(Object outputDir) {
         config.setOutputDir(getProject().file(outputDir).getAbsolutePath());
     }
 
@@ -349,6 +354,42 @@ public class SwaggerCodegenTask extends DefaultTask {
     public void languageSpecificPrimitives(String... specificPrimitives) {
         for (String s : specificPrimitives) {
             config.addLanguageSpecificPrimitive(s);
+        }
+    }
+
+    @Input
+    public Map<String, String> getReservedWordsMappings() {
+        return config.getReservedWordsMappings();
+    }
+
+    public void setReservedWordsMappings(Map<String, String> mappings) {
+        config.setReservedWordsMappings(mappings);
+    }
+
+    public void reservedWordMappings(Map<String, String> mappings) {
+        for (Map.Entry<String, String> entry : mappings.entrySet()) {
+            config.addAdditionalReservedWordMapping(entry.getKey(), entry.getValue());
+        }
+    }
+
+    @Input
+    @Optional
+    public String getIgnoreFileOverride() {
+        return config.getIgnoreFileOverride();
+    }
+
+    public void setIgnoreFileOverride(String ignoreFileOverride) {
+        config.setIgnoreFileOverride(ignoreFileOverride);
+    }
+
+    @Input
+    public Map<String, Object> getDynamicProperties() {
+        return config.getDynamicProperties();
+    }
+
+    public void dynamicProperties (Map<String, Object> dynamicProperties) {
+        for (Map.Entry<String, Object> property : dynamicProperties.entrySet()) {
+            config.addDynamicProperty(property.getKey(), property.getValue());
         }
     }
 

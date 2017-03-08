@@ -43,7 +43,7 @@ class GradleCrossCompileTest extends Specification {
             }
             swaggerCodegen {
                 inputSpec project.file('src/main/swagger-codegen/swagger.yaml')
-                language 'jaxrs'
+                lang 'jaxrs'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
             }

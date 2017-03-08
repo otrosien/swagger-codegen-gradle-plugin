@@ -58,7 +58,7 @@ class SwaggerCodegenCrossCompileTest extends Specification {
             }
             swaggerCodegen {
                 inputSpec project.file('src/main/swagger-codegen/swagger.yaml')
-                language 'spring'
+                lang 'spring'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
                 invokerPackage 'com.example.invoker'
@@ -135,7 +135,7 @@ class SwaggerCodegenCrossCompileTest extends Specification {
             }
             swaggerCodegen {
                 inputSpec project.file('src/main/swagger-codegen/swagger.yaml')
-                language 'springinterfaces'
+                lang 'springinterfaces'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
             }

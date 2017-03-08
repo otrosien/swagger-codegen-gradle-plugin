@@ -56,7 +56,7 @@ class SwaggerCodegenSpec extends Specification {
             swaggerCodegen {
                 // check all configuration params
                 inputSpec SwaggerCodegenSpec.getResource('/SwaggerCodegenSpec.yaml').path
-                language 'spring'
+                lang 'spring'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
                 invokerPackage 'com.example.invoker'
@@ -85,7 +85,7 @@ class SwaggerCodegenSpec extends Specification {
         then:
         project.tasks.findByName('swaggerCodegen').with {
             inputSpec.name   == 'SwaggerCodegenSpec.yaml'
-            language         == 'spring'
+            lang             == 'spring'
             apiPackage       == 'com.example.project.api'
             modelPackage     == 'com.example.project.model'
             invokerPackage   == 'com.example.invoker'
@@ -146,7 +146,7 @@ class SwaggerCodegenSpec extends Specification {
             }
             swaggerCodegen {
                 inputSpec 'missing.yaml'
-                language 'spring'
+                lang      'spring'
             }
             tasks.swaggerCodegen.invokeSwaggerCodegen()
         }
@@ -175,7 +175,7 @@ class SwaggerCodegenSpec extends Specification {
         then:
         project.tasks.findByName('swaggerCodegen').with {
             inputSpec.name   == 'file.yaml'
-            language         == 'php'
+            lang             == 'php'
         }
     }
 }

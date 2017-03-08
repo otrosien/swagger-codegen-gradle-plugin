@@ -56,21 +56,11 @@ public class SwaggerCodegenTask extends DefaultTask {
         return configFile;
     }
 
-    @Input
-    public String getLanguage() {
-        return config.getLang();
-    }
-
-    public void setLanguage(String language) {
-        config.setLang(language);
-    }
-
-    // compatibility with CodegenConfigurator API
     public void setLang(String language) {
         config.setLang(language);
     }
 
-    // compatibility with CodegenConfigurator API
+    @Input
     public String getLang() {
         return config.getLang();
     }

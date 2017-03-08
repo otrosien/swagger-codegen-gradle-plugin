@@ -25,10 +25,6 @@ import org.gradle.api.plugins.JavaPlugin;
 import org.gradle.api.plugins.JavaPluginConvention;
 import org.gradle.api.tasks.SourceSet;
 
-/*
- * TODO: dependency configuration for swagger-codegen version 
- * (+ cross-compile integration test)
- */
 public class SwaggerCodegenPlugin implements Plugin<Project> {
 
     @Override

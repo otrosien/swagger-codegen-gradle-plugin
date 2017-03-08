@@ -5,7 +5,7 @@ cache:
   directories:
   - $HOME/.gradle
 install: true
-script: ./gradlew clean build jacoco
+script: ./gradlew clean build jacocoTestReport
 after_success:
 - ./gradlew coveralls
 - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then ./publish.sh; fi

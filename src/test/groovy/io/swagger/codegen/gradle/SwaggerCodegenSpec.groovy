@@ -209,4 +209,26 @@ class SwaggerCodegenSpec extends Specification {
         defaultTask != customTask
         customTask.inputSpec.name != defaultTask.inputSpec.name
     }
+
+    def "should reject project directory as task output directory"() {
+
+        given:
+        def project = ProjectBuilder.builder().build()
+
+        when:
+        project.with {
+            apply plugin: 'io.swagger.codegen'
+            repositories {
+                mavenCentral()
+            }
+            swaggerCodegen {
+                outputDir = project.rootDir
+            }
+            tasks.swaggerCodegen.invokeSwaggerCodegen()
+        }
+
+        then:
+        GradleException e = thrown()
+        e.message.contains('Setting output directory to project directory is dangerous, and not supported.')
+    }
 }

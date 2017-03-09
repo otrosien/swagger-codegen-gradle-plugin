@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.GradleException;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.InputFile;
@@ -387,8 +388,22 @@ public class SwaggerCodegenTask extends DefaultTask {
         }
     }
 
+    /**
+     * Guard against deleting the directory being passed.
+     * I accidentally did this to the root project directory.
+     */
+    private void validateOutputDir() {
+        if (getOutputDir().equals(getProject().getProjectDir())) {
+            throw new GradleException("Setting output directory to project directory is dangerous, and not supported.");
+        }
+        if (getOutputDir().equals(getProject().getRootDir())) {
+            throw new GradleException("Setting output directory to rootProject directory is dangerous, and not supported.");
+        }
+    }
+
     @TaskAction
     public void invokeSwaggerCodegen() throws Exception {
+        validateOutputDir();
         Set<File> files = getProject().getConfigurations().getByName("swaggerCodegen").getFiles();
         Set<URL> urls = new HashSet<>(files.size());
         for (File file : files) {

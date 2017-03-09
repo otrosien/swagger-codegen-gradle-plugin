@@ -21,9 +21,8 @@ import org.gradle.testfixtures.ProjectBuilder
 
 import spock.lang.Specification
 
-// TODO: Test that the output dir can be seen on compileJava path.
 // TODO: Test up-to-date checks
-// TODO: Support non-java language based projects.
+// TODO: Improve support non-java language based projects
 // TODO: Create documentation snippets from the tests to include in documentation
 // see http://mrhaki.blogspot.de/2014/04/awesome-asciidoc-include-partial-parts.html
 class SwaggerCodegenSpec extends Specification {

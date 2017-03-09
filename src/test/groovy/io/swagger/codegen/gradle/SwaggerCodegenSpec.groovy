@@ -23,6 +23,7 @@ import spock.lang.Specification
 // TODO: Test that the output dir can be seen on compileJava path.
 // TODO: Test creation of additional swagger codegen task
 // TODO: Test up-to-date checks
+// TODO: Support non-java language based projects.
 // TODO: Create documentation snippets from the tests to include in README / cross-compile tests
 class SwaggerCodegenSpec extends Specification {
 
@@ -38,8 +39,10 @@ class SwaggerCodegenSpec extends Specification {
 
         then:
         // check for task existance and task defaults
-        project.tasks.findByName('swaggerCodegen') .with {
-            outputDir.name == 'swaggerCodegen'
+        project.tasks.findByName('swaggerCodegen') .with { task ->
+            task.group == 'Swagger'
+            task.description.contains('Generates code from the swagger spec and the CodegenConfigurator')
+            task.outputDir.name == 'swaggerCodegen'
         }
 
     }

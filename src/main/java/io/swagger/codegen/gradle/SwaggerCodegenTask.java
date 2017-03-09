@@ -47,7 +47,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     public SwaggerCodegenTask() {
         setDescription("Generates code from the swagger spec and the CodegenConfigurator.");
         setGroup("Swagger");
-        setOutputDir(getProject().file("build/generated-src/" + this.getName()));
+        setOutputDir("build/generated-src/" + this.getName());
     }
 
     public void fromFile(Object file) {

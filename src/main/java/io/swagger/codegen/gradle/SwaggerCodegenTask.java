@@ -404,6 +404,9 @@ public class SwaggerCodegenTask extends DefaultTask {
     @TaskAction
     public void invokeSwaggerCodegen() throws Exception {
         validateOutputDir();
+        if(!isSkipOverwrite()) {
+            getProject().delete(getOutputDir());
+        }
         Set<File> files = getProject().getConfigurations().getByName("swaggerCodegen").getFiles();
         Set<URL> urls = new HashSet<>(files.size());
         for (File file : files) {

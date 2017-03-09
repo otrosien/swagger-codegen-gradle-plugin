@@ -41,10 +41,12 @@ public class SwaggerCodegenTask extends DefaultTask {
 
     private File configFile;
 
+    private static final Object LOCK = new Object();
+
     public SwaggerCodegenTask() {
         setOutputDir(getProject().file("build/generated-src/" + this.getName()));
     }
- 
+
     public void fromFile(Object file) {
         this.configFile = getProject().file(file);
         config = CodegenConfigurator.fromFile(this.configFile.getAbsolutePath());
@@ -267,7 +269,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     public void instantiationTypes(Map<String, String> instantiationTypes) {
-        for(Map.Entry<String, String> entry : instantiationTypes.entrySet()) {
+        for (Map.Entry<String, String> entry : instantiationTypes.entrySet()) {
             config.addInstantiationType(entry.getKey(), entry.getValue());
         }
     }
@@ -282,7 +284,7 @@ public class SwaggerCodegenTask extends DefaultTask {
     }
 
     public void systemProperties(Map<String, String> systemProperties) {
-        for(Map.Entry<String, String> entry : systemProperties.entrySet()) {
+        for (Map.Entry<String, String> entry : systemProperties.entrySet()) {
             config.addSystemProperty(entry.getKey(), entry.getValue());
         }
     }
@@ -377,7 +379,7 @@ public class SwaggerCodegenTask extends DefaultTask {
         return config.getDynamicProperties();
     }
 
-    public void dynamicProperties (Map<String, Object> dynamicProperties) {
+    public void dynamicProperties(Map<String, Object> dynamicProperties) {
         for (Map.Entry<String, Object> property : dynamicProperties.entrySet()) {
             config.addDynamicProperty(property.getKey(), property.getValue());
         }
@@ -389,13 +391,25 @@ public class SwaggerCodegenTask extends DefaultTask {
         Set<URL> urls = new HashSet<>(files.size());
         for (File file : files) {
             urls.add(file.toURI().toURL());
-//            System.out.println(file.toString());
+            // System.out.println(file.toString());
         }
-        try (URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[0]), 
-                Thread.currentThread().getContextClassLoader())) {
-            DefaultGenerator generator = (DefaultGenerator) classLoader.loadClass("io.swagger.codegen.DefaultGenerator").newInstance();
-            generator.opts(config.toClientOptInput())
-            .generate();
+
+        /*
+         * Since the generator sets system properties we need to ensure that two
+         * tasks don't try to have system properties set in the same JVM.
+         * https://github.com/swagger-api/swagger-codegen/issues/4788
+         */
+        synchronized (LOCK) {
+            try (URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[0]),
+                    Thread.currentThread().getContextClassLoader())) {
+                DefaultGenerator generator = (DefaultGenerator) classLoader
+                        .loadClass("io.swagger.codegen.DefaultGenerator").newInstance();
+                generator.opts(config.toClientOptInput()).generate();
+            } finally {
+                for (String key : config.getSystemProperties().keySet()) {
+                    System.clearProperty(key);
+                }
+            }
         }
     }
 

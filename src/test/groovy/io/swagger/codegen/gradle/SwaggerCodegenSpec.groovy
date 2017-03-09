@@ -21,10 +21,10 @@ import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
 // TODO: Test that the output dir can be seen on compileJava path.
-// TODO: Test creation of additional swagger codegen task
 // TODO: Test up-to-date checks
 // TODO: Support non-java language based projects.
-// TODO: Create documentation snippets from the tests to include in README / cross-compile tests
+// TODO: Create documentation snippets from the tests to include in documentation
+// see http://mrhaki.blogspot.de/2014/04/awesome-asciidoc-include-partial-parts.html
 class SwaggerCodegenSpec extends Specification {
 
     def "plugin should provide generator task"() {
@@ -180,5 +180,33 @@ class SwaggerCodegenSpec extends Specification {
             inputSpec.name   == 'file.yaml'
             lang             == 'php'
         }
+    }
+
+    def "should support a custom codegen task"() {
+
+        given:
+        def project = ProjectBuilder.builder().build()
+
+        when:
+        project.with {
+            apply plugin: 'io.swagger.codegen'
+            repositories {
+                mavenCentral()
+            }
+            swaggerCodegen {
+                inputSpec 'file1.yaml'
+            }
+            task('swagMore', type: SwaggerCodegenTask) {
+                inputSpec 'file2.yaml'
+            }
+        }
+
+        then:
+        def defaultTask = project.tasks.findByName('swaggerCodegen')
+        def customTask =  project.tasks.findByName('swagMore')
+
+        customTask != null
+        defaultTask != customTask
+        customTask.inputSpec.name != defaultTask.inputSpec.name
     }
 }

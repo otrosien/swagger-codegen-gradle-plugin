@@ -16,7 +16,7 @@ plugins {
 
 swaggerCodegen {
     inputSpec 'src/main/resources/swagger.yaml' // point to your OpenAPI spec file
-    language 'jaxrs'
+    lang 'jaxrs'
     // package for your resource models
     apiPackage 'com.example.project.api'
     // package for your domain models

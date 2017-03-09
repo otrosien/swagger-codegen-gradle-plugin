@@ -44,6 +44,8 @@ public class SwaggerCodegenTask extends DefaultTask {
     private static final Object LOCK = new Object();
 
     public SwaggerCodegenTask() {
+        setDescription("Generates code from the swagger spec and the CodegenConfigurator.");
+        setGroup("Swagger");
         setOutputDir(getProject().file("build/generated-src/" + this.getName()));
     }
 

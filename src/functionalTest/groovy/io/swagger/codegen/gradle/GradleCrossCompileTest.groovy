@@ -36,6 +36,7 @@ class GradleCrossCompileTest extends Specification {
         given:
         buildFile << """
             plugins {
+                id 'java'
                 id 'io.swagger.codegen'
             }
             repositories {
@@ -46,6 +47,11 @@ class GradleCrossCompileTest extends Specification {
                 lang 'jaxrs'
                 apiPackage 'com.example.project.api'
                 modelPackage 'com.example.project.model'
+            }
+            swaggerCodegen.doLast {
+                fileTree(outputDir).each {
+                    println "content: " + it
+                }
             }
 
         """
@@ -61,6 +67,8 @@ class GradleCrossCompileTest extends Specification {
 
         then:
         ! result.output.contains('swaggerCodegen UP-TO-DATE')
+        result.output.contains("build/generated-src/swaggerCodegen/src/gen/java")
+        result.output.contains("build/generated-src/swaggerCodegen/src/main/java")
         result.task(":swaggerCodegen").outcome == SUCCESS
 
         where:

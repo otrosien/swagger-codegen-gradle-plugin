@@ -62,7 +62,8 @@ public class SwaggerCodegenPlugin implements Plugin<Project> {
                                 .getSourceSets().getByName("main");
                         final Task compileJava = p.getTasks().getByName("compileJava");
                         for (SwaggerCodegenTask t : p.getTasks().withType(SwaggerCodegenTask.class)) {
-                            mainSourceSet.getJava().srcDir(p.file(t.getOutputDir()));
+                            mainSourceSet.getJava().srcDir(p.relativePath(t.getOutputDir()) + "/src/main/java");
+                            mainSourceSet.getJava().srcDir(p.relativePath(t.getOutputDir()) + "/src/gen/java");
                             compileJava.dependsOn(t);
                         }
                     }

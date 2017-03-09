@@ -254,6 +254,10 @@ class SwaggerCodegenSpec extends Specification {
                                 .getSourceSets().getByName("main")
                                 .getAllJava()
                                 .getSrcDirs()
-                                .contains(project.tasks.findByName('swaggerCodegen').getOutputDir())
+                                .collect {
+                                    project.relativePath(it)
+                                }.containsAll([
+                                    'build/generated-src/swaggerCodegen/src/main/java',
+                                    'build/generated-src/swaggerCodegen/src/gen/java'])
     }
 }

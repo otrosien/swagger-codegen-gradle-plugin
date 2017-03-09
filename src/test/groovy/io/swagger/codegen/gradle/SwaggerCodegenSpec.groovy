@@ -16,6 +16,7 @@
 package io.swagger.codegen.gradle
 
 import org.gradle.api.GradleException
+import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.testfixtures.ProjectBuilder
 
 import spock.lang.Specification
@@ -230,5 +231,30 @@ class SwaggerCodegenSpec extends Specification {
         then:
         GradleException e = thrown()
         e.message.contains('Setting output directory to project directory is dangerous, and not supported.')
+    }
+
+    def "should add swagger codegen output as java source dir"() {
+
+        given:
+        def project = ProjectBuilder.builder().build()
+
+        when:
+        project.with {
+            apply plugin: 'io.swagger.codegen'
+            apply plugin: 'java'
+
+            repositories {
+                mavenCentral()
+            }
+        }
+        // force afterEvaluate to fire.
+        project.evaluate()
+
+        then:
+        project.getConvention().getPlugin(JavaPluginConvention.class)
+                                .getSourceSets().getByName("main")
+                                .getAllJava()
+                                .getSrcDirs()
+                                .contains(project.tasks.findByName('swaggerCodegen').getOutputDir())
     }
 }
